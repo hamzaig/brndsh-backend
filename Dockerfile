@@ -9,6 +9,8 @@ COPY package*.json ./
 # Install all deps (including devDeps needed for tsc / nest build)
 RUN npm ci
 
+
+
 # Copy source and compile
 COPY . .
 RUN npm run build
