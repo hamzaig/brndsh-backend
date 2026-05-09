@@ -1,0 +1,30 @@
+name: Deploy codebase-investigator backend
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, codebase-investigator]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo PORT='${{ secrets.PORT }}' >> .env
+          echo ANTHROPIC_API_KEY='${{ secrets.ANTHROPIC_API_KEY }}' >> .env
+          echo GITHUB_TOKEN='${{ secrets.GH_TOKEN }}' >> .env
+          cat .env
+
+      - name: Build Docker image
+        run: docker compose -f docker-compose.yml -p codebase-investigator build
+
+      - name: Stop previous containers
+        run: docker compose -f docker-compose.yml -p codebase-investigator down --remove-orphans
+
+      - name: Start containers
+        run: docker compose -f docker-compose.yml -p codebase-investigator up -d
