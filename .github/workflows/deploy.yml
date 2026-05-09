@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, codebase-investigator]
+    runs-on: [self-hosted, Linux, X64]
 
     steps:
       - name: Checkout code
